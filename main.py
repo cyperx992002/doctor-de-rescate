@@ -21,7 +21,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from database import Base, engine, get_db
-from models import LoginSession, SocialAccount, User
+from models import LoginSession, MobileOAuthHandoff, SocialAccount, User
 
 load_dotenv(Path(__file__).resolve().parent / ".env")
 
@@ -30,6 +30,8 @@ SESSION_DURATION = timedelta(days=30)
 PASSWORD_ITERATIONS = 310_000
 USERNAME_PATTERN = re.compile(r"^[A-Za-z0-9_]{3,32}$")
 OAUTH_STATE_DURATION = 600
+MOBILE_OAUTH_HANDOFF_DURATION = timedelta(minutes=5)
+MOBILE_REDIRECT_URI = "doctorrescate://oauth/callback"
 LOCAL_OAUTH_BASE_URL = "http://127.0.0.1:8001"
 
 
@@ -40,6 +42,16 @@ class Credentials(BaseModel):
 
 class UserResponse(BaseModel):
     username: str
+
+
+class MobileAuthResponse(UserResponse):
+    access_token: str
+    token_type: str = "bearer"
+
+
+class MobileOAuthExchange(BaseModel):
+    code: str = Field(min_length=20, max_length=128)
+    code_verifier: str = Field(pattern=r"^[A-Za-z0-9_-]{43,128}$")
 
 
 class AssistantRequest(BaseModel):
@@ -85,19 +97,26 @@ def set_session_cookie(response: Response, token: str) -> None:
     )
 
 
-def create_session(db: Session, user: User, response: Response) -> None:
+def create_session(db: Session, user: User, response: Response | None = None) -> str:
     token = secrets.token_urlsafe(32)
     expires_at = datetime.utcnow() + SESSION_DURATION
     db.add(LoginSession(token_hash=token_digest(token), user_id=user.id, expires_at=expires_at))
     db.commit()
-    set_session_cookie(response, token)
+    if response is not None:
+        set_session_cookie(response, token)
+    return token
 
 
 def get_current_user(
     request: Request,
     db: DbSession,
 ) -> User:
-    token = request.cookies.get(SESSION_COOKIE)
+    authorization = request.headers.get("authorization")
+    if authorization:
+        scheme, separator, credentials = authorization.partition(" ")
+        token = credentials if separator and scheme.lower() == "bearer" else None
+    else:
+        token = request.cookies.get(SESSION_COOKIE)
     if not token:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="سجّل الدخول أولاً.")
 
@@ -148,6 +167,29 @@ def register(credentials: Credentials, response: Response, db: DbSession) -> Use
     return UserResponse(username=user.username)
 
 
+@app.post("/api/auth/mobile/register", response_model=MobileAuthResponse, status_code=status.HTTP_201_CREATED)
+def mobile_register(credentials: Credentials, db: DbSession) -> MobileAuthResponse:
+    username = validate_username(credentials.username)
+    if db.scalar(select(User).where(User.username == username)) is not None:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="اسم المستخدم مستخدم بالفعل.")
+
+    salt = secrets.token_bytes(16)
+    user = User(
+        username=username,
+        password_salt=salt.hex(),
+        password_hash=hash_password(credentials.password, salt).hex(),
+    )
+    db.add(user)
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="اسم المستخدم مستخدم بالفعل.") from None
+    db.refresh(user)
+    token = create_session(db, user)
+    return MobileAuthResponse(username=user.username, access_token=token)
+
+
 @app.post("/api/auth/login", response_model=UserResponse)
 def login(credentials: Credentials, response: Response, db: DbSession) -> UserResponse:
     username = validate_username(credentials.username)
@@ -163,9 +205,29 @@ def login(credentials: Credentials, response: Response, db: DbSession) -> UserRe
     return UserResponse(username=user.username)
 
 
+@app.post("/api/auth/mobile/login", response_model=MobileAuthResponse)
+def mobile_login(credentials: Credentials, db: DbSession) -> MobileAuthResponse:
+    username = validate_username(credentials.username)
+    user = db.scalar(select(User).where(User.username == username))
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="اسم المستخدم أو كلمة المرور غير صحيحة.")
+
+    expected_hash = hash_password(credentials.password, bytes.fromhex(user.password_salt))
+    if not hmac.compare_digest(expected_hash.hex(), user.password_hash):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="اسم المستخدم أو كلمة المرور غير صحيحة.")
+
+    token = create_session(db, user)
+    return MobileAuthResponse(username=user.username, access_token=token)
+
+
 @app.post("/api/auth/logout", status_code=status.HTTP_204_NO_CONTENT)
 def logout(request: Request, response: Response, db: DbSession) -> Response:
-    token = request.cookies.get(SESSION_COOKIE)
+    authorization = request.headers.get("authorization")
+    if authorization:
+        scheme, separator, credentials = authorization.partition(" ")
+        token = credentials if separator and scheme.lower() == "bearer" else None
+    else:
+        token = request.cookies.get(SESSION_COOKIE)
     if token:
         login_session = db.get(LoginSession, token_digest(token))
         if login_session is not None:
@@ -209,7 +271,20 @@ def oauth_state_cookie(provider: str) -> str:
     return f"doctor_rescate_oauth_state_{provider}"
 
 
-def oauth_error_redirect(provider: str, error_code: str) -> RedirectResponse:
+def oauth_error_redirect(provider: str, error_code: str, mobile: bool = False) -> RedirectResponse:
+    if mobile:
+        query = urlencode({"error": error_code, "provider": provider})
+        response = RedirectResponse(
+            url=f"{MOBILE_REDIRECT_URI}?{query}",
+            status_code=status.HTTP_303_SEE_OTHER,
+        )
+        response.delete_cookie(
+            key=oauth_state_cookie(provider),
+            path=f"/api/auth/{provider}/callback",
+            httponly=True,
+            samesite="lax",
+        )
+        return response
     query = urlencode({"auth_error": error_code, "auth_provider": provider})
     response = RedirectResponse(url=f"/?{query}", status_code=status.HTTP_303_SEE_OTHER)
     response.delete_cookie(
@@ -222,13 +297,29 @@ def oauth_error_redirect(provider: str, error_code: str) -> RedirectResponse:
 
 
 @app.get("/api/auth/{provider}/start")
-def social_login_start(provider: str) -> Response:
+def social_login_start(
+    provider: str,
+    client: str = "web",
+    code_challenge: str | None = None,
+    code_challenge_method: str | None = None,
+) -> Response:
+    if client not in {"web", "android"}:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Unsupported sign-in client.")
+    mobile = client == "android"
+    if mobile and (
+        code_challenge is None
+        or not re.fullmatch(r"[A-Za-z0-9_-]{43,128}", code_challenge)
+        or code_challenge_method != "S256"
+    ):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="A valid S256 PKCE challenge is required.")
     client_id, client_secret = oauth_provider_settings(provider)
     base_url = oauth_base_url()
     if not client_id or not client_secret or not base_url:
-        return oauth_error_redirect(provider, "provider_not_configured")
+        return oauth_error_redirect(provider, "provider_not_configured", mobile)
 
     state = secrets.token_urlsafe(32)
+    if mobile:
+        state = f"android.{state}.{code_challenge}"
     callback_url = oauth_callback_url(provider, base_url)
     if provider == "google":
         authorization_url = "https://accounts.google.com/o/oauth2/v2/auth"
@@ -382,18 +473,23 @@ def get_or_create_social_user(db: Session, provider: str, provider_user_id: str)
 
 @app.get("/api/auth/{provider}/callback")
 def social_login_callback(provider: str, request_obj: Request, db: DbSession) -> Response:
+    received_state = request_obj.query_params.get("state", "")
+    state_parts = received_state.split(".", 2)
+    mobile = len(state_parts) == 3 and state_parts[0] == "android"
+    code_challenge = state_parts[2] if mobile else None
     client_id, client_secret = oauth_provider_settings(provider)
     base_url = oauth_base_url()
     if not client_id or not client_secret or not base_url:
-        return oauth_error_redirect(provider, "provider_not_configured")
+        return oauth_error_redirect(provider, "provider_not_configured", mobile)
 
     state_cookie = oauth_state_cookie(provider)
     expected_state = request_obj.cookies.get(state_cookie)
-    received_state = request_obj.query_params.get("state", "")
     if not expected_state or not hmac.compare_digest(expected_state, received_state):
-        return oauth_error_redirect(provider, "oauth_failed")
+        return oauth_error_redirect(provider, "oauth_failed", mobile)
+    if mobile and (code_challenge is None or not re.fullmatch(r"[A-Za-z0-9_-]{43,128}", code_challenge)):
+        return oauth_error_redirect(provider, "oauth_failed", True)
     if request_obj.query_params.get("error") or not request_obj.query_params.get("code"):
-        return oauth_error_redirect(provider, "oauth_failed")
+        return oauth_error_redirect(provider, "oauth_failed", mobile)
 
     try:
         subject = get_social_subject(
@@ -402,13 +498,55 @@ def social_login_callback(provider: str, request_obj: Request, db: DbSession) ->
             oauth_callback_url(provider, base_url),
         )
     except HTTPException:
-        return oauth_error_redirect(provider, "oauth_failed")
+        return oauth_error_redirect(provider, "oauth_failed", mobile)
 
     user = get_or_create_social_user(db, provider, subject)
-    response = RedirectResponse(url="/?social_login=success", status_code=status.HTTP_303_SEE_OTHER)
+    if mobile:
+        code = secrets.token_urlsafe(32)
+        db.add(
+            MobileOAuthHandoff(
+                code_hash=token_digest(code),
+                code_challenge=code_challenge,
+                user_id=user.id,
+                expires_at=datetime.utcnow() + MOBILE_OAUTH_HANDOFF_DURATION,
+            )
+        )
+        db.commit()
+        response = RedirectResponse(
+            url=f"{MOBILE_REDIRECT_URI}?{urlencode({'code': code})}",
+            status_code=status.HTTP_303_SEE_OTHER,
+        )
+    else:
+        response = RedirectResponse(url="/?social_login=success", status_code=status.HTTP_303_SEE_OTHER)
     response.delete_cookie(key=state_cookie, path=f"/api/auth/{provider}/callback", httponly=True, samesite="lax")
-    create_session(db, user, response)
+    if not mobile:
+        create_session(db, user, response)
     return response
+
+
+@app.post("/api/auth/mobile/oauth/exchange", response_model=MobileAuthResponse)
+def exchange_mobile_oauth(payload: MobileOAuthExchange, db: DbSession) -> MobileAuthResponse:
+    handoff = db.get(MobileOAuthHandoff, token_digest(payload.code))
+    if handoff is None or handoff.expires_at <= datetime.utcnow():
+        if handoff is not None:
+            db.delete(handoff)
+            db.commit()
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Sign-in code is invalid or expired.")
+
+    verifier_digest = base64.urlsafe_b64encode(
+        hashlib.sha256(payload.code_verifier.encode("ascii")).digest()
+    ).rstrip(b"=").decode("ascii")
+    if not hmac.compare_digest(handoff.code_challenge, verifier_digest):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Sign-in code verification failed.")
+
+    user = db.get(User, handoff.user_id)
+    db.delete(handoff)
+    if user is None:
+        db.commit()
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="The account is no longer available.")
+
+    token = create_session(db, user)
+    return MobileAuthResponse(username=user.username, access_token=token)
 
 
 def build_gemini_prompt(language: str, message: str) -> str:

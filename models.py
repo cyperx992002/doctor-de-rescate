@@ -33,6 +33,15 @@ class LoginSession(Base):
     user: Mapped[User] = relationship(back_populates="sessions")
 
 
+class MobileOAuthHandoff(Base):
+    __tablename__ = "mobile_oauth_handoffs"
+
+    code_hash: Mapped[str] = mapped_column(String(64), primary_key=True)
+    code_challenge: Mapped[str] = mapped_column(String(128))
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    expires_at: Mapped[datetime] = mapped_column(DateTime, index=True)
+
+
 class SocialAccount(Base):
     __tablename__ = "social_accounts"
     __table_args__ = (

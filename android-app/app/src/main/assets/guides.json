@@ -1,0 +1,182 @@
+{
+  "ar": {
+    "bleeding": {
+      "title": "نزيف شديد",
+      "summary": "جرح عميق أو نزيف لا يتوقف",
+      "lead": "النزيف الغزير يحتاج إلى مساعدة طبية عاجلة.",
+      "steps": [
+        "اتصل بالإسعاف ١٢٣، وضع الهاتف على مكبر الصوت.",
+        "إن أمكن، ارتدِ قفازات. اضغط بقوة وباستمرار على الجرح بقطعة قماش نظيفة.",
+        "إذا تشبعت القطعة بالدم، ضع أخرى فوقها دون نزع الأولى. استمر بالضغط حتى تصل المساعدة."
+      ],
+      "warning": "لا تنزع جسماً مغروساً في الجرح ولا تضغط عليه مباشرة؛ اضغط حوله. إذا كان النزيف خطيراً، لا تنتظر."
+    },
+    "burn": {
+      "title": "حروق",
+      "summary": "حرق بسبب حرارة أو سائل ساخن",
+      "lead": "أبعد المصاب عن مصدر الحرارة بأمان، ثم برّد الحرق.",
+      "steps": [
+        "برّد المنطقة بماء جارٍ بارد أو فاتر لمدة ٢٠ دقيقة. لا تستخدم الثلج.",
+        "انزع الخواتم أو الملابس القريبة من الحرق إذا لم تكن ملتصقة بالجلد.",
+        "غطِّ الحرق برفق بضمادة نظيفة غير وبرية، واطلب المساعدة الطبية."
+      ],
+      "warning": "لا تضع معجون أسنان أو زيتاً أو كريمات، ولا تفقأ الفقاعات. اتصل بـ١٢٣ للحروق الكبيرة أو العميقة أو حروق الوجه أو صعوبة التنفس."
+    },
+    "choking": {
+      "title": "اختناق بالغ",
+      "summary": "الشخص لا يستطيع الكلام أو السعال",
+      "lead": "إذا كان يستطيع السعال أو الكلام، شجّعه على السعال وراقبه.",
+      "steps": [
+        "إذا لم يستطع التنفس أو الكلام أو السعال، اطلب من شخص الاتصال بـ١٢٣ فوراً.",
+        "للبالغ الواعي: أعطه حتى ٥ ضربات بين لوحي الكتف، مع إمالته للأمام.",
+        "إذا لم تنجح، أعطه حتى ٥ ضغطات بطنية إلى الداخل والأعلى. كرر بالتناوب حتى يخرج الجسم أو تصل المساعدة.",
+        "إذا فقد الوعي، أنزله للأرض بأمان وابدأ الإنعاش القلبي الرئوي إن كنت تعرفه، واتبع تعليمات موظف الطوارئ."
+      ],
+      "warning": "هذه الخطوات للبالغ الواعي فقط. لا تستخدم الضغطات البطنية على الرضّع أو الأطفال الصغار أو الحوامل؛ اتصل بالطوارئ واتبع توجيهاتهم."
+    },
+    "fracture": {
+      "title": "اشتباه كسر",
+      "summary": "ألم شديد أو تورّم أو تشوّه",
+      "lead": "تعامل مع الإصابة ككسر محتمل ولا تحاول اختبارها.",
+      "steps": [
+        "اتصل بـ١٢٣ إذا كان الكسر واضحاً أو مفتوحاً أو مؤلماً بشدة، أو إذا وُجد خدر أو نزيف.",
+        "ساعد المصاب على البقاء ثابتاً، واسند الطرف في الوضع الذي وجدته عليه.",
+        "ضع كمادة باردة ملفوفة بقماش على المنطقة، من دون ضغط مباشر على عظم بارز.",
+        "راقب التنفس والوعي، ولا تترك المصاب وحده."
+      ],
+      "warning": "لا تحاول إعادة العظم إلى مكانه أو تحريك المصاب إذا اشتبهت بإصابة في الرأس أو الرقبة أو الظهر. انتظر الإسعاف."
+    },
+    "unresponsive": {
+      "title": "فاقد الوعي",
+      "summary": "لا يستجيب أو لا يتنفس بشكل طبيعي",
+      "lead": "تحقق من أمان المكان، ونادِ عليه وربّت على كتفه.",
+      "steps": [
+        "اطلب من شخص الاتصال بـ١٢٣ وإحضار جهاز صدمات كهربائية إن توفر. استخدم مكبر الصوت.",
+        "إذا كان لا يستجيب ولا يتنفس بشكل طبيعي، ابدأ ضغطات قوية وسريعة في منتصف الصدر بمعدل ١٠٠–١٢٠ ضغطة في الدقيقة.",
+        "استخدم جهاز الصدمات فور توفره واتبع تعليماته. استمر حتى وصول الإسعاف أو عودة التنفس الطبيعي.",
+        "إذا كان فاقد الوعي لكنه يتنفس طبيعياً، راقب تنفسه باستمرار واتبع تعليمات موظف الطوارئ."
+      ],
+      "warning": "إذا لم تكن مدرّباً، اطلب من موظف الطوارئ إرشادك خطوة بخطوة. لا تؤخر الاتصال بالطوارئ."
+    }
+  },
+  "en": {
+    "bleeding": {
+      "title": "Heavy bleeding",
+      "summary": "A deep wound or bleeding that will not stop",
+      "lead": "Heavy bleeding needs urgent medical help.",
+      "steps": [
+        "Call 123 for an ambulance and put the phone on speaker.",
+        "If possible, wear gloves. Press firmly and continuously on the wound with a clean cloth.",
+        "If blood soaks through, add another cloth without removing the first. Keep pressing until help arrives."
+      ],
+      "warning": "Do not remove an embedded object or press directly on it; press around it. Do not delay emergency help for severe bleeding."
+    },
+    "burn": {
+      "title": "Burns",
+      "summary": "A heat or hot-liquid burn",
+      "lead": "Move away from the heat source safely, then cool the burn.",
+      "steps": [
+        "Cool the area under cool or lukewarm running water for 20 minutes. Do not use ice.",
+        "Remove nearby jewelry or clothing unless it is stuck to the skin.",
+        "Loosely cover the burn with a clean, non-fluffy dressing and seek medical advice."
+      ],
+      "warning": "Do not apply toothpaste, oil, or creams, and do not burst blisters. Call 123 for large or deep burns, burns to the face, or trouble breathing."
+    },
+    "choking": {
+      "title": "Adult choking",
+      "summary": "The person cannot speak or cough",
+      "lead": "If they can cough or speak, encourage coughing and watch them closely.",
+      "steps": [
+        "If they cannot breathe, speak, or cough, have someone call 123 immediately.",
+        "For a conscious adult, give up to 5 firm back blows between the shoulder blades while leaning them forward.",
+        "If that does not work, give up to 5 abdominal thrusts inward and upward. Alternate until the object comes out or help arrives.",
+        "If they become unresponsive, lower them safely and start CPR if you know how. Follow the emergency operator’s instructions."
+      ],
+      "warning": "These steps are for a conscious adult only. Do not use abdominal thrusts on infants, young children, or pregnant people; call emergency services and follow their instructions."
+    },
+    "fracture": {
+      "title": "Possible fracture",
+      "summary": "Severe pain, swelling, or deformity",
+      "lead": "Treat it as a possible fracture; do not test the injury.",
+      "steps": [
+        "Call 123 for an obvious or open fracture, severe pain, numbness, or bleeding.",
+        "Help the person stay still and support the limb in the position you found it.",
+        "Place a cloth-wrapped cold pack on the area without pressing on a protruding bone.",
+        "Watch their breathing and alertness, and stay with them."
+      ],
+      "warning": "Do not try to realign the bone. If a head, neck, or back injury is possible, do not move the person; wait for emergency help."
+    },
+    "unresponsive": {
+      "title": "Unresponsive person",
+      "summary": "They do not respond or are not breathing normally",
+      "lead": "Check that the scene is safe. Call to them and tap their shoulder.",
+      "steps": [
+        "Ask someone to call 123 and bring an AED if available. Put the phone on speaker.",
+        "If they are unresponsive and not breathing normally, push hard and fast in the centre of the chest at 100–120 compressions per minute.",
+        "Use an AED as soon as it is available and follow its prompts. Continue until help arrives or they breathe normally.",
+        "If they are unresponsive but breathing normally, keep checking their breathing and follow the emergency operator’s instructions."
+      ],
+      "warning": "If you are not trained, ask the emergency operator to guide you step by step. Do not delay the call."
+    }
+  },
+  "es": {
+    "bleeding": {
+      "title": "Hemorragia intensa",
+      "summary": "Herida profunda o sangrado que no cesa",
+      "lead": "Una hemorragia intensa requiere atención médica urgente.",
+      "steps": [
+        "Llama al 123 para pedir una ambulancia y activa el altavoz.",
+        "Si es posible, ponte guantes. Presiona la herida con firmeza y sin interrupción usando un paño limpio.",
+        "Si el paño se empapa, coloca otro encima sin retirar el primero. Sigue presionando hasta que llegue ayuda."
+      ],
+      "warning": "No retires objetos incrustados ni presiones sobre ellos; presiona alrededor. No retrases la atención ante una hemorragia grave."
+    },
+    "burn": {
+      "title": "Quemaduras",
+      "summary": "Quemadura por calor o líquido caliente",
+      "lead": "Aléjate del calor de forma segura y enfría la quemadura.",
+      "steps": [
+        "Enfría la zona con agua corriente fresca o tibia durante 20 minutos. No uses hielo.",
+        "Retira las joyas o la ropa cercana, salvo que esté pegada a la piel.",
+        "Cubre la quemadura sin apretar con un apósito limpio que no suelte pelusa y pide consejo médico."
+      ],
+      "warning": "No pongas pasta de dientes, aceite ni cremas, y no revientes las ampollas. Llama al 123 si la quemadura es grande o profunda, afecta a la cara o dificulta la respiración."
+    },
+    "choking": {
+      "title": "Atragantamiento en adultos",
+      "summary": "La persona no puede hablar ni toser",
+      "lead": "Si puede toser o hablar, anímala a toser y vigílala de cerca.",
+      "steps": [
+        "Si no puede respirar, hablar ni toser, pide a alguien que llame al 123 de inmediato.",
+        "En un adulto consciente, da hasta 5 golpes firmes entre los omóplatos mientras se inclina hacia delante.",
+        "Si no funciona, da hasta 5 compresiones abdominales hacia dentro y arriba. Alterna hasta que salga el objeto o llegue ayuda.",
+        "Si pierde el conocimiento, bájala al suelo con cuidado e inicia la RCP si sabes hacerla. Sigue las instrucciones del operador."
+      ],
+      "warning": "Estos pasos son solo para adultos conscientes. No hagas compresiones abdominales a bebés, niños pequeños ni embarazadas; llama a emergencias y sigue sus indicaciones."
+    },
+    "fracture": {
+      "title": "Posible fractura",
+      "summary": "Dolor intenso, hinchazón o deformidad",
+      "lead": "Trátala como una posible fractura y no pruebes la lesión.",
+      "steps": [
+        "Llama al 123 si la fractura es evidente o abierta, hay dolor intenso, entumecimiento o sangrado.",
+        "Ayuda a la persona a permanecer quieta y sujeta la extremidad tal como está.",
+        "Coloca una compresa fría envuelta en tela, sin presionar sobre un hueso que sobresalga.",
+        "Vigila su respiración y estado de alerta, y quédate con ella."
+      ],
+      "warning": "No intentes recolocar el hueso. Si puede haber una lesión en la cabeza, el cuello o la espalda, no muevas a la persona y espera a emergencias."
+    },
+    "unresponsive": {
+      "title": "Persona inconsciente",
+      "summary": "No responde o no respira con normalidad",
+      "lead": "Comprueba que el lugar sea seguro. Háblale y tócale el hombro.",
+      "steps": [
+        "Pide a alguien que llame al 123 y traiga un desfibrilador si hay uno. Activa el altavoz.",
+        "Si no responde y no respira con normalidad, comprime fuerte y rápido el centro del pecho, a un ritmo de 100–120 compresiones por minuto.",
+        "Usa el desfibrilador en cuanto esté disponible y sigue sus indicaciones. Continúa hasta que llegue ayuda o respire con normalidad.",
+        "Si está inconsciente pero respira con normalidad, vigila su respiración y sigue las instrucciones del operador."
+      ],
+      "warning": "Si no tienes formación, pide al operador que te guíe paso a paso. No retrases la llamada."
+    }
+  }
+}

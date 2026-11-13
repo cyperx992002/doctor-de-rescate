@@ -49,3 +49,18 @@ The frontend is deployed at `https://doctor-de-rescate.vercel.app`. Configure `D
 The guide and AI answers can be read aloud using your browser's installed speech voices. Keep device media volume on; the app uses the selected language's voice when available.
 
 PostgreSQL support uses the `psycopg` driver listed in `requirements.txt`. Set `DATABASE_URL` to a SQLAlchemy URL such as `postgresql+psycopg://user:password@host/database`.
+
+## Native Android APK
+
+`android-app/` is a native Android application, not a WebView wrapper. It includes the offline Arabic, English, and Spanish first-aid guides, emergency dialing, speech recognition and playback, account registration/sign-in, Google and Facebook OAuth, and the online AI assistant with optional photo input.
+
+On Windows, install a JDK 17+ and Android SDK Platform 35, then build a shareable debug-signed APK:
+
+```powershell
+cd android-app
+.\gradlew.bat assembleDebug
+```
+
+The APK is written to `android-app/app/build/outputs/apk/debug/app-debug.apk`. This debug build is suitable for direct testing and sharing, but not for Google Play; Play Store distribution needs a private release signing key. Keep the signing key private and backed up for future updates.
+
+The Android app connects to `https://doctor-de-rescate.vercel.app`. Native account login and social sign-in require the mobile-authentication API changes in this repository to be deployed first. Google and Facebook provider credentials remain server-side; never put their secrets in the Android app.
