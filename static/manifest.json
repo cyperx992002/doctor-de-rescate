@@ -1,0 +1,20 @@
+{
+  "name": "دكتور الإنقاذ - إسعافات أولية",
+  "short_name": "دكتور الإنقاذ",
+  "description": "دليل عربي للإسعافات الأولية مع دعم الصوت وإمكانية الوصول دون اتصال.",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#fffdfd",
+  "theme_color": "#201c20",
+  "icons": [
+    {
+      "src": "/app-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

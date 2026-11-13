@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#201c20">
+    <meta name="description" content="دليل إسعافات أولية عربي واضح، يعمل حتى دون اتصال بالإنترنت.">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="/app-icon.png" type="image/png">
+    <link rel="stylesheet" href="/style.css?v=9">
+    <title>دكتور الإنقاذ | دليل إسعافات أولية</title>
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="دكتور الإنقاذ، الصفحة الرئيسية">
+          <img src="/app-icon.png" alt="" width="42" height="42">
+          <span><strong id="brand-name">دكتور الإنقاذ</strong><small id="brand-subtitle">إسعاف أولي واضح وقت الحاجة</small></span>
+        </a>
+        <div class="topbar-actions">
+          <select class="language-select" id="language-select" aria-label="لغة التطبيق">
+            <option value="ar">العربية</option>
+            <option value="en">English</option>
+            <option value="es">Español</option>
+          </select>
+          <button class="account-button" id="account-open" type="button">حسابي</button>
+        </div>
+      </header>
+
+      <section class="urgent" aria-labelledby="urgent-title">
+        <p class="urgent-kicker"><span class="pulse" aria-hidden="true"></span> <span id="urgent-kicker">إذا كان الخطر فورياً، لا تنتظر</span></p>
+        <h1 id="urgent-title">اتصل بالإسعاف أولاً.</h1>
+        <p class="urgent-copy" id="urgent-copy">في مصر، اتصل على ١٢٣. شغّل مكبر الصوت واتبع تعليمات موظف الطوارئ.</p>
+        <a class="call-button" href="tel:123">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.4 11.4 0 0 0 .57 3.6 1 1 0 0 1-.25 1z"/></svg>
+          <span id="call-label">اتصل بالإسعاف ١٢٣</span>
+        </a>
+        <p class="urgent-note" id="urgent-note">إذا لم تكن في مصر، استخدم رقم الطوارئ المحلي.</p>
+      </section>
+
+      <section class="voice-panel" aria-labelledby="voice-title">
+        <div class="voice-heading">
+          <div>
+            <h2 id="voice-title">مساعد صوتي</h2>
+            <p id="voice-intro">صِف الحالة بصوتك للعثور على دليل إسعاف مناسب.</p>
+          </div>
+          <span class="voice-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"></rect><path d="M5 11a7 7 0 0 0 14 0M12 18v3m-4 0h8"></path></svg>
+          </span>
+        </div>
+        <button class="voice-button" id="voice-start" type="button">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"></rect><path d="M5 11a7 7 0 0 0 14 0M12 18v3m-4 0h8"></path></svg>
+          <span id="voice-button-label">ابدأ التحدث</span>
+        </button>
+        <p class="voice-status" id="voice-status" role="status" aria-live="polite"></p>
+        <p class="voice-privacy" id="voice-privacy">قد يعالج المتصفح الصوت للتعرّف على الكلام. لا تذكر معلومات شخصية. لا يحفظ هذا التطبيق التسجيلات.</p>
+        <div class="voice-result" id="voice-result" hidden>
+          <p id="voice-transcript"></p>
+          <button class="voice-guide-button" id="voice-show-guide" type="button">عرض خطوات الإسعاف</button>
+        </div>
+      </section>
+
+      <section class="guides" aria-labelledby="guides-title">
+        <div class="section-heading">
+          <div>
+            <h2 id="guides-title">ما الذي حدث؟</h2>
+            <p id="guides-intro">اختر الحالة لعرض خطوات أولية بسيطة.</p>
+          </div>
+          <span class="offline-tag"><span aria-hidden="true"></span> <span id="offline-label">متاح دون إنترنت</span></span>
+        </div>
+        <div class="guide-list" id="guide-list"></div>
+      </section>
+
+      <section class="guide-detail" id="guide-detail" aria-live="polite" hidden>
+        <button class="back-button" id="guide-back" type="button">‹ <span>كل الحالات</span></button>
+        <div id="guide-content"></div>
+      </section>
+
+      <section class="assistant-chat" aria-labelledby="assistant-chat-title">
+        <div class="section-heading">
+          <div>
+            <h2 id="assistant-chat-title">مساعد الطوارئ الذكي</h2>
+            <p id="assistant-chat-intro">اسأل عن حالة غير موجودة في القائمة، وسأعطيك تعليمات سريعة وآمنة.</p>
+          </div>
+        </div>
+        <div class="chat-thread" id="chat-thread" aria-live="polite"></div>
+        <form id="chat-form" class="chat-form">
+          <div class="chat-actions">
+            <button id="chat-voice" type="button" class="icon-button" aria-label="تحدث">🎙</button>
+            <button id="chat-upload" type="button" class="icon-button" aria-label="إرفاق صورة">📷</button>
+            <input id="chat-image" type="file" accept="image/*" hidden>
+          </div>
+          <input id="chat-input" type="text" maxlength="300" placeholder="اكتب الحالة أو الأعراض..." aria-label="اكتب الحالة أو الأعراض" autocomplete="off">
+          <button id="chat-send" type="submit">إرسال</button>
+        </form>
+      </section>
+
+      <aside class="notice">
+        <strong id="notice-title">مهم</strong>
+        <p id="notice-copy">هذا الدليل لا يشخّص الإصابات ولا يستبدل الإسعاف أو الطبيب. لا ترفع صوراً أو فيديوهات حساسة. عند الشك أو تدهور الحالة، اتصل بالطوارئ.</p>
+      </aside>
+
+      <footer><span id="footer-copy">دكتور الإنقاذ · إرشاد أولي، وليس تشخيصاً طبياً</span></footer>
+    </main>
+
+    <dialog class="account-dialog" id="account-dialog" aria-labelledby="account-title">
+      <form method="dialog" class="dialog-close-row">
+        <button class="close-button" id="dialog-close" aria-label="إغلاق" value="close">×</button>
+      </form>
+      <div id="account-panel">
+        <h2 id="account-title">حسابك</h2>
+        <p class="account-intro" id="account-intro">يمكنك استخدام دليل الطوارئ دون حساب.</p>
+        <div class="auth-tabs" role="tablist" aria-label="اختيار الدخول أو التسجيل">
+          <button class="auth-tab is-active" id="login-tab" type="button" role="tab" aria-selected="true">تسجيل الدخول</button>
+          <button class="auth-tab" id="register-tab" type="button" role="tab" aria-selected="false">حساب جديد</button>
+        </div>
+        <form id="auth-form">
+          <label for="username" id="username-label">اسم المستخدم</label>
+          <input id="username" name="username" autocomplete="username" minlength="3" maxlength="32" required>
+          <p class="field-hint" id="username-hint">3 إلى 32 حرفاً إنجليزياً أو رقماً أو _</p>
+          <label for="password" id="password-label">كلمة المرور</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" minlength="10" maxlength="128" required>
+          <p class="field-hint" id="password-hint">10 أحرف على الأقل</p>
+          <p class="form-error" id="auth-error" role="alert" hidden></p>
+          <button class="submit-button" id="auth-submit" type="submit">دخول</button>
+        </form>
+      </div>
+    </dialog>
+
+    <script src="/app.js?v=9" defer></script>
+  </body>
+</html>

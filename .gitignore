@@ -1,0 +1,11 @@
+.env
+.env.*
+!.env.example
+.venv/
+node_modules/
+unneeded/
+__pycache__/
+*.py[cod]
+*.db
+.vercel/
+vercel-debug.log
