@@ -37,14 +37,14 @@ Vercel detects the FastAPI app in `main.py`; `vercel.json` sets a 60-second func
 Vercel Functions do not provide durable local SQLite storage, so configure a Supabase Postgres database before enabling account registration. Supabase Free includes 500 MB and may pause projects after seven days of inactivity; paused projects can be restored. In Vercel's project settings, set these environment variables without committing values to source control:
 
 - `DATABASE_URL`: use Supabase's shared pooler connection string with SQLAlchemy's `postgresql+psycopg://` driver prefix and `sslmode=require`.
-- `PUBLIC_BASE_URL`: the exact Vercel HTTPS origin assigned to the project.
+- `PUBLIC_BASE_URL`: `https://doctor-de-rescate.vercel.app` for Production and Preview.
 - `COOKIE_SECURE`: `true`.
 - `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`: set as private environment variables.
 - `GEMINI_API_KEY`: optional; set privately if the AI assistant should be enabled.
 
-After Vercel assigns the project URL, set it as `PUBLIC_BASE_URL` and add `https://your-project.vercel.app/api/auth/google/callback` to the Google OAuth client's authorized redirect URIs. The exact hostname must match `PUBLIC_BASE_URL`. Keep credentials out of the repository and enter them only in Vercel's private environment-variable settings. Do not deploy the previously exposed OAuth secret; replace it before making the app public.
+Set the Google OAuth client's authorized redirect URI to `https://doctor-de-rescate.vercel.app/api/auth/google/callback`. The exact hostname must match `PUBLIC_BASE_URL`. Keep credentials out of the repository and enter them only in Vercel's private environment-variable settings. Do not deploy the previously exposed OAuth secret; replace it before making the app public.
 
-The app has not been deployed yet. The local project must be connected to a Vercel account and a Supabase database before it has a public backend URL. Review the first-aid content and emergency contact information with qualified local professionals before a public launch.
+The frontend is deployed at `https://doctor-de-rescate.vercel.app`. Configure `DATABASE_URL` with a Supabase PostgreSQL connection string before using backend features; Vercel's local filesystem is not durable and the API will fail without a database connection. Review the first-aid content and emergency contact information with qualified local professionals before a public launch.
 
 The guide and AI answers can be read aloud using your browser's installed speech voices. Keep device media volume on; the app uses the selected language's voice when available.
 
