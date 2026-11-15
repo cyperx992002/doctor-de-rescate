@@ -212,7 +212,7 @@ button { color: inherit; }
 .voice-guide-button { min-height: 38px; padding: 0 12px; border: 1px solid #e1a5ac; border-radius: 8px; color: var(--red-deep); background: white; font-size: 12px; font-weight: 750; }
 
 .guides { padding-top: 25px; }
-.section-heading { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 13px; }
+.section-heading { display: flex; min-width: 0; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 13px; }
 .section-heading > div { min-width: 0; }
 .section-heading h2 { margin: 0; font-size: 21px; letter-spacing: -.025em; }
 .section-heading p { margin: 4px 0 0; color: var(--ink-soft); font-size: 12px; }
@@ -229,9 +229,11 @@ button { color: inherit; }
   font-weight: 700;
   max-width: 100%;
   white-space: normal;
+  overflow-wrap: anywhere;
 }
 
-.offline-tag span { width: 6px; height: 6px; border-radius: 50%; background: var(--red); }
+.offline-tag > span:first-child { width: 6px; height: 6px; flex: 0 0 6px; border-radius: 50%; background: var(--red); }
+.offline-tag > span:last-child { min-width: 0; }
 
 .guide-list { border-top: 1px solid var(--line); }
 .guide-item {
@@ -365,6 +367,13 @@ button { color: inherit; }
   color: var(--white);
   background: var(--red);
   font-weight: 800;
+}
+
+@media (max-width: 480px) {
+  .chat-form { flex-wrap: wrap; }
+  .chat-actions { flex: 0 0 100%; }
+  .chat-form input[type="text"] { min-width: 0; }
+  #chat-send { min-width: 72px; padding-inline: 10px; }
 }
 
 .back-button {

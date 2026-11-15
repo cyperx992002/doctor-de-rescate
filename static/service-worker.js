@@ -1,4 +1,4 @@
-const CACHE_NAME = "doctor-rescate-v10";
+const CACHE_NAME = "doctor-rescate-v11";
 const APP_SHELL = [
   "/",
   "/style.css",
